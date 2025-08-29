@@ -3,10 +3,13 @@ import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 
+const authRouter = require("./routes/auth");
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.use("/api/auth", authRouter);
 
 app.use(cors({
     origin: process.env.CLIENT_URL,
