@@ -1,17 +1,39 @@
 const express = require("express");
-const router = express.Router();
 const bcrypt = require("bcryptjs");
+import db from '../db/db';
+
+const router = express.Router();
 
 router.post("/register", async (req, res) => {
     try {
-        const { firstName, lastName, email, password } = req.body;
+        const { firstName, lastName, email, phoneNumber, password } = req.body;
+
+        if (!firstName || !lastName || !email || !password) {
+            return res.status(400).json({ message: "Missing required fields, please complete the form!"})
+        }
+
         const saltRounds = 10;
 
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        
+        const checkResult = await db.query("SELECT * FROM users WHERE email = $1",
+            [email]
+        );
+
+        if (checkResult.rows.length > 0) {
+            return res.status(409).json({ message: "The user already exists! Try logging in." });
+        }
+        else {
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+            const result = await db.query(
+              "INSERT INTO users (role, status, first_name, last_name, email, phone, password_hash) VALUES ('user', DEFAULT, $1, $2, $3, $4, $5)",
+              [firstName, lastName, email, phoneNumber, hashedPassword]
+            );
+            console.log(result);
+            res.redirect("/");
+        }
     }
     catch (err) {
-
+        return res.status(500).json({ message: 'Issue with the registration.' });
     }
 });
 
