@@ -12,10 +12,11 @@ router.post("/register", async (req, res) => {
             return res.status(400).json({ message: "Missing required fields, please complete the form!"})
         }
 
+        const lowercasedEmail = email.toLowerCase();
         const saltRounds = 10;
 
         const checkResult = await db.query("SELECT * FROM users WHERE email = $1",
-            [email]
+            [lowercasedEmail]
         );
 
         if (checkResult.rows.length > 0) {
@@ -26,7 +27,7 @@ router.post("/register", async (req, res) => {
 
             const result = await db.query(
               "INSERT INTO users (role, status, first_name, last_name, email, phone, password_hash) VALUES ('user', DEFAULT, $1, $2, $3, $4, $5)",
-              [firstName, lastName, email, phoneNumber, hashedPassword]
+              [firstName, lastName, lowercasedEmail, phoneNumber, hashedPassword]
             );
             console.log(result);
             res.redirect("/");
