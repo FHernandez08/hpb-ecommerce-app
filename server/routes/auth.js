@@ -9,7 +9,7 @@ router.post("/register", async (req, res) => {
         const { firstName, lastName, email, phoneNumber, password } = req.body;
 
         if (!firstName || !lastName || !email || !password) {
-            return res.status(400).json({ message: "Missing required fields, please complete the form!"})
+            return res.status(400).json({ message: "Missing required fields, please complete the login form!"})
         }
 
         const lowercasedEmail = email.toLowerCase();
@@ -39,7 +39,45 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
+        if (!email || !password) {
+            return res.status(400).json({ message: "Missing required fields, please complete the login form!" })
+        }
+
+        const lowercasedEmail = email.toLowerCase();
+
+        const checkEmail = await db.query("SELECT * FROM users WHERE email = $1", 
+            [lowercasedEmail]
+        );
+
+        if (checkEmail.rows.length === 1) {
+            const hashedPassword = checkEmail.rows[0].password_hash;
+            const currentStatus = checkEmail.rows[0].status;
+
+            if (currentStatus === "active") {
+                const isMatch = await bcrypt.compare(password, hashedPassword);
+
+                if (isMatch) {
+                    console.log("Successful Login!")
+                    res.redirect("/");
+                }
+                else {
+                    return res.status(401).json("The credentials were invalid. Try again!")
+                }
+            } else {
+                return res.status(403).json({ message: "Forbidden access. Contact the website admin!"})
+            }
+
+        } else {
+            return res.status(401).json({ message: "The email does not exist. Please try again!"})
+        }
+
+    }
+    catch (err) {
+        return res.status(500).json({ message: "Issue with logging in your account. Please try again later!"})
+    }
 });
 
 module.exports = router;
