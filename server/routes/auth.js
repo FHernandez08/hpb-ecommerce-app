@@ -1,6 +1,6 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-import db from '../db/db';
+import express from "express";
+import bcrypt from "bcryptjs";
+import { pool } from '../db/db';
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.post("/register", async (req, res) => {
         const lowercasedEmail = email.toLowerCase();
         const saltRounds = 10;
 
-        const checkResult = await db.query("SELECT * FROM users WHERE email = $1",
+        const checkResult = await pool.query("SELECT * FROM users WHERE email = $1",
             [lowercasedEmail]
         );
 
@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
         else {
             const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-            const result = await db.query(
+            const result = await pool.query(
               "INSERT INTO users (role, status, first_name, last_name, email, phone, password_hash) VALUES ('user', DEFAULT, $1, $2, $3, $4, $5)",
               [firstName, lastName, lowercasedEmail, phoneNumber, hashedPassword]
             );
@@ -48,7 +48,7 @@ router.post("/login", async (req, res) => {
 
         const lowercasedEmail = email.toLowerCase();
 
-        const checkEmail = await db.query("SELECT * FROM users WHERE email = $1", 
+        const checkEmail = await pool.query("SELECT * FROM users WHERE email = $1", 
             [lowercasedEmail]
         );
 
@@ -81,7 +81,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", async (req, res) => {
-
+    // this route will be used for both login/register features
 });
 
 module.exports = router;

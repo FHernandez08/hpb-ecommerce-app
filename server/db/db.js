@@ -1,6 +1,6 @@
-import pg from "pg";
+import { Pool } from "pg";
 
-const db = new pg.Client({
+const pool = new Pool({
     user: process.env.PG_USER,
     host: process.env.PG_HOST,
     database: process.env.PG_DATABASE,
@@ -8,6 +8,4 @@ const db = new pg.Client({
     port: process.env.PG_PORT,
 });
 
-db.connect();
-
-module.exports = db;
+export { pool };
