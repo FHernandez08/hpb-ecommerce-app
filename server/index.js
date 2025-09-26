@@ -28,7 +28,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 import authRouter from "./routes/auth.js";
-import oauthRouter from "./routes/oauth.js"
+import oauthRouter from "./routes/oauth.js";
 
 const PORT = process.env.PORT || 5000;
 app.use("/auth", authRouter);
