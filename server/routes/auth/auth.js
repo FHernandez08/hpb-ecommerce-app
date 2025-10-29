@@ -84,7 +84,6 @@ router.post("/logout", async (req, res) => {
     // this route will be used for both login/register features
 });
 
-module.exports = router;
 
 // need to add /auth/logout
 
@@ -93,3 +92,7 @@ module.exports = router;
 // need to add /password/forgot
 
 // need to add /password/reset
+
+
+
+module.exports = router;
