@@ -85,3 +85,11 @@ router.post("/logout", async (req, res) => {
 });
 
 module.exports = router;
+
+// need to add /auth/logout
+
+// need to add /auth/refresh
+
+// need to add /password/forgot
+
+// need to add /password/reset

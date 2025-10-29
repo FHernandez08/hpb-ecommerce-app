@@ -61,6 +61,7 @@ async function getUserById(id) {
 
 }
 
+// creates new user and adds to database
 async function createUser({ email, firstName, lastName, phone } = {}) {
   const id = randomUUID();
 
