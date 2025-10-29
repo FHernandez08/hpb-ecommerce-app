@@ -27,12 +27,16 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-import authRouter from "./routes/auth.js";
-import oauthRouter from "./routes/oauth.js";
+import authRouter from "./routes/auth/auth.js";
+import oauthRouter from "./routes/auth/oauth.js";
+import bookingRouter from "./routes/bookings/ booking.js";
+import paymentsRouter from "./routes/payments/payment.js";
 
 const PORT = process.env.PORT || 5000;
 app.use("/auth", authRouter);
 app.use("/auth", oauthRouter);
+app.use("/api/bookings", bookingRouter);
+app.use("/api/payments", paymentsRouter);
 
 app.get("/" , (req, res) => {
     res.send("Server is running!");
