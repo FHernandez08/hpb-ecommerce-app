@@ -1,0 +1,1 @@
+// Extracts token from authorization header --> cookie --> query

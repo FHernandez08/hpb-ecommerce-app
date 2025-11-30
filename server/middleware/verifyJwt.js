@@ -1,0 +1,1 @@
+// verifies token and sets req.user or leaves null if invalid
