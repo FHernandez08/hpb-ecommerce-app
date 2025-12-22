@@ -20,3 +20,5 @@ function validateData(schema) {
         }
     }
 }
+
+export default validateData;

@@ -11,6 +11,7 @@ import bodyParser from "body-parser";
 import "./config/passport.js";
 import authRouter from "./routes/auth/auth.js";
 import oauthRouter from "./routes/auth/oauth.js";
+import usersRouter from "./routes/users/users.js";
 import bookingRouter from "./routes/bookings/ booking.js";
 import paymentsRouter from "./routes/payments/payment.js";
 import globalLimter from "./middleware/rateLimiter-global.js";
@@ -60,16 +61,16 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 const PORT = process.env.PORT || 5000;
 
 // GET health route
 app.use(healthRoute);
 
-// Auth Routes
-app.use("/auth", authRouter);
-app.use("/auth", oauthRouter);
+// Backend Routes
+app.use("/api/auth", authRouter);
+app.use("/api/auth", oauthRouter);
+app.use("/api/users", usersRouter);
 app.use("/api/bookings", bookingRouter);
 app.use("/api/payments", paymentsRouter);
 

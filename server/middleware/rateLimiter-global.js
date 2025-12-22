@@ -7,5 +7,4 @@ const globalLimiter = rateLimit({
     max: 100,
     message: "Too many requests from this IP, please try again after 15 minutes",
 });
-
-module.exports = globalLimiter;
+export default globalLimiter;

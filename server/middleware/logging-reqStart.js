@@ -8,4 +8,4 @@ function requestStartLogger(req, res, next) {
     next();
 };
 
-module.exports = requestStartLogger;
+export default requestStartLogger;

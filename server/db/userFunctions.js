@@ -87,4 +87,4 @@ async function updateUser(id, fields) {
     }
 }
 
-module.exports = { findById, findByEmail, createUser, updateUser };
+export default { findById, findByEmail, createUser, updateUser };
