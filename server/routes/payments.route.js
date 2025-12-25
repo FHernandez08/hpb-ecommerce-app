@@ -1,15 +1,16 @@
-import express from "express";
+// in index.js --> implement app.use("/api/payments", paymentsRouter)
 
+import express from "express";
 const router = express.Router();
 
 // ROUTES //
 // creates the PayPal session
-router.post("intent", (req, res) => {
+router.post("/intent", (req, res) => {
     null;
 });
 
 // confirms the payment on the client-side - redirect page to successful payment
-router.post("confirm", (req, res) => {
+router.post("/confirm", (req, res) => {
     null;
 });
 
@@ -17,3 +18,5 @@ router.post("confirm", (req, res) => {
 router.post("/webhook", (req, res) => {
     null;
 });
+
+export default router;

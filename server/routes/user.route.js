@@ -1,10 +1,10 @@
 import express from "express";
 
-import getTokenFrom from "../../middleware/getTokenFrom";
-import verifyAccessToken from "../../middleware/verifyAccessToken";
-import attachUser from "../../middleware/attachUser";
-import { ensureAuth } from "../../middleware/ensure";
-import updateUser from "../../db/userFunctions";
+import getTokenFrom from "../middleware/getTokenFrom";
+import verifyAccessToken from "../middleware/verifyAccessToken";
+import attachUser from "../middleware/attachUser";
+import { ensureAuth } from "../middleware/ensure";
+import updateUser from "../db/userFunctions";
 
 const router = express.Router();
 

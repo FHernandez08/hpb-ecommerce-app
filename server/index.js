@@ -9,11 +9,11 @@ import bodyParser from "body-parser";
 
 // file imports
 import "./config/passport.js";
-import authRouter from "./routes/auth/auth.js";
-import oauthRouter from "./routes/auth/oauth.js";
-import usersRouter from "./routes/users/users.js";
-import bookingRouter from "./routes/bookings/ booking.js";
-import paymentsRouter from "./routes/payments/payment.js";
+import authRouter from "./routes/auth/auth.route.js";
+import oauthRouter from "./routes/auth/oauth.route.js";
+import usersRouter from "./routes/user.route.js";
+import bookingRouter from "./routes/bookings.route.js";
+import paymentsRouter from "./routes/payments.route.js";
 import globalLimter from "./middleware/rateLimiter-global.js";
 import requestId from "./middleware/request-id.js";
 import paypalWebhookRouter from "./middleware/paypal-body-exception.js";
@@ -71,7 +71,7 @@ app.use(healthRoute);
 app.use("/api/auth", authRouter);
 app.use("/api/auth", oauthRouter);
 app.use("/api/users", usersRouter);
-app.use("/api/bookings", bookingRouter);
+app.use("/api/bookings", bookingsRouter);
 app.use("/api/payments", paymentsRouter);
 
 app.get("/" , (req, res) => {
