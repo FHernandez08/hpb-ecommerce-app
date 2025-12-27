@@ -39,4 +39,4 @@ function ensureAdmin(req, res, next) {
     }
 }
 
-export default { ensureAuth, ensureAdmin }
+export default { ensureAuth, ensureAdmin };
