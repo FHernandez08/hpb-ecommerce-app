@@ -1,10 +1,10 @@
 // in index.js --> app.use("/api/bookings", bookingsRouter)
 
-import validateData from "../middleware/validation";
-import { ensureAuth } from "../middleware/ensure";
+import validateData from "../middleware/validation.js";
+import { ensureAuth } from "../middleware/ensure.js";
 
 import express from "express";
-import { createBooking, getMyBookings, getBookingById } from "../controllers/services/bookings.controller";
+import { createBooking, getMyBookings, getBookingById } from "../controllers/services/bookings.controller.js";
 const router = express.Router();
 
 // creates booking route that ties user to package/date, enforces ownership

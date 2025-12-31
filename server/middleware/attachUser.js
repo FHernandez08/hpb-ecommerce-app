@@ -1,5 +1,5 @@
 // takes the token payload and attaches it to the user on the request
-import findById from "../db/userFunctions"
+import { findById } from "../db/userFunctions.js"
 
 async function attachUser(req, res, next) {
     try {

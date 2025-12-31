@@ -1,5 +1,5 @@
 // findByIdIid) - fetch a user by UUID
-import { pool } from "./db"
+import { pool } from "./db.js"
 
 async function findById(id) {
     const resultRow = await pool.query('SELECT * FROM users WHERE id = $1 LIMIT 1', [id]);
@@ -87,4 +87,4 @@ async function updateUser(id, fields) {
     }
 }
 
-export default { findById, findByEmail, createUser, updateUser };
+export { findById, findByEmail, createUser, updateUser };

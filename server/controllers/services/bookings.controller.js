@@ -1,8 +1,8 @@
-import { pool } from "../../db/db";
+import { pool } from "../../db/db.js";
 
-import bookingDurationLogic from "../../services/bookingDuration.service";
-import bookingCalcLogic from "../../services/bookingPricing.service";
-import bookingSnapshotLogic from "../../services/bookingSnapshot.service";
+import bookingDurationLogic from "../../services/bookingDuration.service.js";
+import bookingCalcLogic from "../../services/bookingPricing.service.js";
+import bookingSnapshotLogic from "../../services/bookingSnapshot.service.js";
 
 async function createBooking(req, res) {
     const client = await pool.connect();
@@ -70,4 +70,4 @@ async function getBookingById(req, res) {
     }
 };
 
-export default { createBooking, getMyBookings, getBookingById };
+export { createBooking, getMyBookings, getBookingById };

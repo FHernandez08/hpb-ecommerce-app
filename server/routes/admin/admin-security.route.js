@@ -4,12 +4,12 @@ import express from "express";
 const router = express.Router();
 
 // security events list
-router.get("/security", async (req, res) => {
+router.get("/", async (req, res) => {
     null
 });
 
 // filter by type (authentication | authorization | integrity)
-router.get("/security/:type", async (req, res) => {
+router.get("/:type", async (req, res) => {
     null
 });
 

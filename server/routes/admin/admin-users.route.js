@@ -4,12 +4,12 @@ import express from "express";
 const router = express.Router();
 
 // list users
-router.get("/users", async (req, res) => {
+router.get("/", async (req, res) => {
     null
 });
 
 // specific user details - admin view
-router.get("/users/:userId", async (req, res) => {
+router.get("/:userId", async (req, res) => {
     null
 });
 

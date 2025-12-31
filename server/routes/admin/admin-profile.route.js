@@ -4,7 +4,7 @@ import express from "express";
 const router = express.Router();
 
 // admin self/profile
-router.get("/profile", async (req, res) => {
+router.get("/", async (req, res) => {
     null
 });
 

@@ -30,4 +30,4 @@ router.post('/paypal', express.raw({ type: '*/*' }), (req, res) => {
     }
 })
 
-module.exports = router;
+export default router;

@@ -1,10 +1,10 @@
 import express from "express";
 
-import getTokenFrom from "../middleware/getTokenFrom";
-import verifyAccessToken from "../middleware/verifyAccessToken";
-import attachUser from "../middleware/attachUser";
-import { ensureAuth } from "../middleware/ensure";
-import updateUser from "../db/userFunctions";
+import getTokenFrom from "../middleware/getTokenFrom.js";
+import verifyAccessToken from "../middleware/verifyAccessToken.js";
+import attachUser from "../middleware/attachUser.js";
+import { ensureAuth } from "../middleware/ensure.js";
+import { updateUser } from "../db/userFunctions.js";
 
 const router = express.Router();
 
@@ -65,3 +65,5 @@ router.put("/me", getTokenFrom, verifyAccessToken, attachUser, ensureAuth, async
         next(err);
     }
 });
+
+export default router;

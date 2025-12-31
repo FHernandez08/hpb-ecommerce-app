@@ -3,14 +3,14 @@ import bcrypt, { genSalt } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
-import validateData from "../../middleware/validation";
-import registerSchema from "../../validation/auth/register.schema";
-import { findByEmail, createUser } from "../../db/userFunctions";
-import loginSchema from "../../validation/auth/login.schema";
-import getTokenFrom from "../../middleware/getTokenFrom";
-import verifyAccessToken from "../../middleware/verifyAccessToken";
-import attachUser from "../../middleware/attachUser";
-import { ensureAuth } from "../../middleware/ensure";
+import validateData from "../../middleware/validation.js";
+import registerSchema from "../../validation/auth/register.schema.js";
+import { findByEmail, createUser } from "../../db/userFunctions.js";
+import loginSchema from "../../validation/auth/login.schema.js";
+import getTokenFrom from "../../middleware/getTokenFrom.js";
+import verifyAccessToken from "../../middleware/verifyAccessToken.js";
+import attachUser from "../../middleware/attachUser.js";
+import { ensureAuth } from "../../middleware/ensure.js";
 
 const router = express.Router();
 
@@ -105,3 +105,5 @@ router.post("/logout", (req, res, next) => {
         path: '/',
     }).status(204).end();
 })
+
+export default router;

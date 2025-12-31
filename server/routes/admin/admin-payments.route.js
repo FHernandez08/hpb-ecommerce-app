@@ -4,7 +4,7 @@ import express from "express";
 const router = express.Router();
 
 // manual override of payment status (paid in full, pending, rejected)
-router.post("/payments/manual", async (req, res) => {
+router.post("/manual", async (req, res) => {
     null
 });
 
