@@ -32,11 +32,13 @@ async function findByEmail(email) {
 async function createUser(data) {
     const email = data.email.trim();
     const password_hash = data.password_hash;
-    const firstName = data.first_name;
-    const lastName = data.last_name;
+    const first_name = data.first_name;
+    const last_name = data.last_name;
     const avatar_url = data.avatar_url;
+    const provider = data.provider;
+    const provider_id = data.provider_id;
 
-    const user = await pool.query('INSERT INTO users (email, password_hash, first_name, last_name, avatar_url) VALUES ($1, $2, $3, $4, $5) RETURNING *', [email, password_hash, firstName, lastName, avatar_url]);
+    const user = await pool.query('INSERT INTO users (email, password_hash, first_name, last_name, avatar_url, provider, provider_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [email, password_hash, first_name, last_name, avatar_url, provider, provider_id]);
 
     return user.rows[0];
 }

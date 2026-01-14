@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import passport from 'passport';
 import helmet from "helmet";
 import bodyParser from "body-parser";
+import cookieParser from 'cookie-parser';
 
 // file imports
 import "./config/passport.js";
@@ -70,6 +71,7 @@ app.use("/webhooks", paypalWebhookRouter);
 
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use(express.json());
 
@@ -82,8 +84,14 @@ app.use(healthRoute);
 
 // Backend Routes
 app.use("/api/auth", authRouter);
+
+console.log("Mounted /api/auth")
+
 // app.use("/api/auth", oauthRouter);
 app.use("/api/users", usersRouter);
+
+console.log("Mounted /api/users")
+
 app.use("/api/bookings", bookingRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/addons", addOnsRouter);

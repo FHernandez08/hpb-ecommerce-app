@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "checkJs": false,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "target": "ES2022"
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "out",
+    ".vercel"
+  ]
+}

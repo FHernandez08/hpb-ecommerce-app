@@ -2,18 +2,14 @@ import express from "express";
 import bcrypt, { genSalt } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import crypto from "crypto";
 
 import validateData from "../../middleware/validation.js";
 import registerSchema from "../../validation/auth/register.schema.js";
 import { findByEmail, createUser } from "../../db/userFunctions.js";
 import loginSchema from "../../validation/auth/login.schema.js";
-import getTokenFrom from "../../middleware/getTokenFrom.js";
-import verifyAccessToken from "../../middleware/verifyAccessToken.js";
-import attachUser from "../../middleware/attachUser.js";
-import { ensureAuth } from "../../middleware/ensure.js";
 
 const router = express.Router();
-
 
 // auth register route - POST
 router.post("/register", validateData(registerSchema), async (req, res, next) => {
@@ -32,9 +28,11 @@ router.post("/register", validateData(registerSchema), async (req, res, next) =>
         }
     }
 
-    const password_hash = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const provider = 'local';
+    const provider_id = crypto.randomUUID();
 
-    const newUser = await createUser({email: trimmedEmail, password_hash, first_name, last_name, avatar_url: null});
+    const newUser = await createUser({email: trimmedEmail, password_hash: hashedPassword, first_name, last_name, avatar_url: null, provider, provider_id});
 
     const payload = { sub: newUser.id, role: newUser.role }
 
@@ -51,8 +49,8 @@ router.post("/register", validateData(registerSchema), async (req, res, next) =>
         path: '/',
     });
 
-    const { _password_hash, ...updatedUser } = newUser;
-    return res.status(201).json({ updatedUser, token });
+    const { password_hash, ...updatedUser } = newUser;
+    return res.status(201).json({ user: updatedUser });
 });
 
 // auth login route - POST
