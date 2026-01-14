@@ -124,29 +124,52 @@ router.post("/paypal/create-order", ensureAuth, async (req, res) => {
         }
 
         const inserted = await pool.query(
-            `INSERT INTO payments (
-                booking_id,
-                user_id,
-                provider,
-                provider_order_id,
-                status,
-                status_reason,
-                subtotal_cents,
-                discount_cents,
-                tax_cents,
-                total_cents,
-                provider_total_cents,
-                idempotency_key,
-                attempt_no,
-                raw_provider_create
-            )
-            VALUES ($1, 'paypal', $2, 'created', NULL, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-            RETURNING
-                id, booking_id, provider, provider_order_id, status, currency, subtotal_cents, discount_cents,
-                tax_cents, total_cents, idempotency_key, attempt_no, created_at`,
-                [
-                    bookingId, paypalOrderId, currency_code, total, 0, 0, total, total, idempotencyKey, 1, data
-                ]
+        `
+        INSERT INTO payments (
+            booking_id,
+            user_id,
+            provider,
+            provider_order_id,
+            status,
+            status_reason,
+            currency,
+            subtotal_cents,
+            discount_cents,
+            tax_cents,
+            total_cents,
+            provider_total_cents,
+            idempotency_key,
+            attempt_no,
+            raw_provider_create
+        )
+        VALUES (
+            $1, $2, $3, $4, $5, $6,
+            $7, $8, $9, $10, $11,
+            $12, $13, $14, $15
+        )
+        RETURNING
+            id, booking_id, user_id, provider, provider_order_id,
+            status, currency, subtotal_cents, discount_cents, tax_cents,
+            total_cents, provider_total_cents, idempotency_key, attempt_no,
+            created_at
+        `,
+        [
+            bookingIdTrimmed,          // $1
+            req.user.sub,              // $2
+            "paypal",                  // $3
+            paypalOrderId,             // $4
+            "created",                 // $5
+            null,                      // $6
+            currency_code,             // $7
+            total,                     // $8  (or subtotal if you split later)
+            0,                         // $9
+            0,                         // $10
+            total,                     // $11
+            total,                     // $12
+            idempotencyKey,            // $13
+            1,                         // $14
+            data,                      // $15
+        ]
         );
 
         const payment = inserted.rows[0];
