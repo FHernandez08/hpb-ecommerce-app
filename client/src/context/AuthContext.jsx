@@ -50,11 +50,11 @@ export const AuthProvider = ({ children }) => {
             };
         }
         catch (error) {
-            console.log(error);
             if (error.response?.status === 401) {
                 setStatus("unauthed");
                 setUser(null);
             };
+            return { ok: false, message: error.response?.data?.message || "Login failed" }
         }
     }
 
@@ -71,11 +71,11 @@ export const AuthProvider = ({ children }) => {
             };
         }
         catch (error) {
-            console.log(error);
             if (error.response?.status === 401) {
                 setStatus("unauthed");
                 setUser(null);
             };
+            return { ok: false, message: error.message?.data?.message || "Registration failed" }
         }
     }
 

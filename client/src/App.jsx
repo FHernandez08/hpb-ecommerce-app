@@ -14,7 +14,7 @@ import AdminBookings from './pages/admin/AdminBookings.jsx';
 import AdminBookingDetail from './pages/admin/AdminBookingDetail.jsx'
 
 export default function App() {
-    const { status, user } = useAuth();
+    const { status, user, isAuthenticated, logout } = useAuth();
 
     return (
         <div>
@@ -29,21 +29,30 @@ export default function App() {
                     <li>
                         <Link to="/">Home</Link>
                     </li>
-                    <li>
-                        <Link to="/login">Login</Link>
-                    </li>
-                    <li>
-                        <Link to="/register">Register</Link>
-                    </li>
-                    <li>
-                        <Link to="/profile">Profile</Link>
-                    </li>
-                    <li>
-                        <Link to="/bookings/me">My Bookings</Link>
-                    </li>
-                    <li>
-                        <Link to="/admin/bookings">Admin Bookings</Link>
-                    </li>
+                    {
+                        isAuthenticated ? (
+                            <>
+                                <li>
+                                    <Link to="/profile">Profile</Link>
+                                </li>
+                                <li>
+                                    <Link to="/bookings/me">My Bookings</Link>
+                                </li>
+                                <li>
+                                    <button onClick={logout}>Log Out</button>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <li>
+                                    <Link to="/login">Login</Link>
+                                </li>
+                                <li>
+                                    <Link to="/register">Register</Link>
+                                </li>
+                            </>
+                        )
+                    }
                 </ul>
             </nav>
             <hr />
