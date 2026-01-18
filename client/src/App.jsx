@@ -1,5 +1,5 @@
 // Main app component
-
+import './index.css';
 import { Routes, Route, Link } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 

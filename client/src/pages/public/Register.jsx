@@ -30,32 +30,34 @@ export default function Register() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Register</h2>
+        <div className="page">
+            <form onSubmit={handleSubmit}>
+                <h2>Register</h2>
 
-            <div>
-                <label>First Name:</label>
-                <input type="text" value={first_name} onChange={(e) => setFirst_name(e.target.value)} required />
-            </div>
+                <div>
+                    <label>First Name:</label>
+                    <input type="text" value={first_name} onChange={(e) => setFirst_name(e.target.value)} required />
+                </div>
 
-            <div>
-                <label>Last Name:</label>
-                <input type="text" value={last_name} onChange={(e) => setLast_name(e.target.value)} required />
-            </div>
+                <div>
+                    <label>Last Name:</label>
+                    <input type="text" value={last_name} onChange={(e) => setLast_name(e.target.value)} required />
+                </div>
 
-            <div>
-                <label>Email:</label>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            </div>
+                <div>
+                    <label>Email:</label>
+                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                </div>
 
-            <div>
-                <label>Password:</label>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            </div>
+                <div>
+                    <label>Password:</label>
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                </div>
 
-            <button type="submit" disabled={isSubmitting}>
-                Register
-            </button>
-        </form>
+                <button type="submit" disabled={isSubmitting}>
+                    Register
+                </button>
+            </form>
+        </div>
     )
 }
