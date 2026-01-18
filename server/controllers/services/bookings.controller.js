@@ -10,7 +10,7 @@ async function createBooking(req, res) {
         // Grab the inputs
         const { product_id, event_start_at, duration_minutes, notes, timezone, city, state, zip } = req.body;
 
-        const user_id = req.user.sub;
+        const user_id = req.user.id;
 
         // Implementing the logic services
         const durationResult = bookingDurationLogic(event_start_at, duration_minutes);
@@ -45,7 +45,11 @@ async function createBooking(req, res) {
 };
 
 async function getMyBookings(req, res) {
-    const userId = req.user.sub;
+    if (!req.user?.id) {
+        return res.status(401).send("Authentication Required!")
+    }
+
+    const userId = req.user.id;
 
     const { rows } = await pool.query(
         "SELECT b.id, b.user_id, b.product_id, b.event_start_at, b.duration_minutes, b.status, b.notes, b.timezone, b.city, b.state, b.zip, b.created_at, s.booking_id, s.is_quote_pending, s.total, s.currency, s.line_items, s.created_at AS snapshot_created_at FROM bookings AS b LEFT JOIN booking_pricing_snapshots AS s ON s.booking_id = b.id WHERE b.user_id = $1 ORDER BY b.created_at DESC", [userId]
@@ -55,8 +59,13 @@ async function getMyBookings(req, res) {
 }
 
 async function getBookingById(req, res) {
-    const userId = req.user.sub;
     const bookingId = req.params.bookingId;
+
+    if (!req.user?.id) {
+        return res.status(401).send("Authentication Required!")
+    }
+
+    const userId = req.user.id;
 
     const { rows } = await pool.query(
         "SELECT b.id, b.user_id, b.product_id, b.event_start_at, b.duration_minutes, b.status, b.notes, b.timezone, b.city, b.state, b.zip, b.created_at, s.booking_id, s.is_quote_pending, s.total, s.currency, s.line_items, s.created_at AS snapshot_created_at FROM bookings AS b LEFT JOIN booking_pricing_snapshots AS s ON s.booking_id = b.id WHERE b.id = $1 AND b.user_id = $2", [bookingId, userId]
