@@ -5,6 +5,9 @@ import { ensureAuth } from "../middleware/ensure.js";
 import { pool } from "../db/db.js";
 import crypto from "crypto";
 import { getPaypalAccessToken } from "../services/paypal.service.js";
+import getTokenFrom from "../middleware/getTokenFrom.js";
+import authenticateToken from "../middleware/verifyAccessToken.js";
+import attachUser from "../middleware/attachUser.js";
 
 const router = express.Router();
 
@@ -17,7 +20,7 @@ function generateIdempotencyKey() {
 
 // ROUTES //
 // creates the PayPal session
-router.post("/paypal/create-order", ensureAuth, async (req, res) => {
+router.post("/paypal/create-order", getTokenFrom, authenticateToken, attachUser, ensureAuth, async (req, res) => {
     try {
         const { bookingId } = req.body;
 
@@ -27,8 +30,10 @@ router.post("/paypal/create-order", ensureAuth, async (req, res) => {
             return res.status(400).send("Invalid input!");
         }
 
+        const bookingIdTrimmed = bookingId.trim();
+
         const currentBooking = await pool.query(
-            "SELECT id, user_id, status, total_cents, currency FROM bookings WHERE id = $1", [bookingId]
+            "SELECT id, user_id, status, total_cents, currency FROM bookings WHERE id = $1", [bookingIdTrimmed]
         );
 
         // ownership check - ensure that the booking belongs to the correct usser
@@ -37,8 +42,8 @@ router.post("/paypal/create-order", ensureAuth, async (req, res) => {
         }
 
         const currBookingUserId = currentBooking.rows[0]["user_id"];
-        if (currBookingUserId !== req.user?.sub) {
-            return res.status(403).send("Access denied!")
+        if (currBookingUserId !== req.user?.id) {
+            return res.status(403).json({ message: "Access denied!" })
         };
 
         // booking status check - it can ONLY be requested, everything else is denied
@@ -60,7 +65,7 @@ router.post("/paypal/create-order", ensureAuth, async (req, res) => {
             WHERE booking_id = $1 
             AND status IN ('captured', 'created', 'requires_capture') 
             ORDER BY created_at DESC 
-            LIMIT 1`, [bookingId]
+            LIMIT 1`, [bookingIdTrimmed]
         )
 
         if (paymentRow.rowCount > 0) {
@@ -86,7 +91,7 @@ router.post("/paypal/create-order", ensureAuth, async (req, res) => {
             intent: "CAPTURE",
             purchase_units: [
                 {
-                    reference_id: bookingId,
+                    reference_id: bookingIdTrimmed,
                     amount: {
                         currency_code: currency_code,
                         value: amount_value
@@ -127,7 +132,6 @@ router.post("/paypal/create-order", ensureAuth, async (req, res) => {
         `
         INSERT INTO payments (
             booking_id,
-            user_id,
             provider,
             provider_order_id,
             status,
@@ -145,30 +149,29 @@ router.post("/paypal/create-order", ensureAuth, async (req, res) => {
         VALUES (
             $1, $2, $3, $4, $5, $6,
             $7, $8, $9, $10, $11,
-            $12, $13, $14, $15
+            $12, $13, $14
         )
         RETURNING
-            id, booking_id, user_id, provider, provider_order_id,
+            id, booking_id, provider, provider_order_id,
             status, currency, subtotal_cents, discount_cents, tax_cents,
             total_cents, provider_total_cents, idempotency_key, attempt_no,
             created_at
         `,
         [
             bookingIdTrimmed,          // $1
-            req.user.sub,              // $2
-            "paypal",                  // $3
-            paypalOrderId,             // $4
-            "created",                 // $5
-            null,                      // $6
-            currency_code,             // $7
-            total,                     // $8  (or subtotal if you split later)
+            "paypal",                  // $2
+            paypalOrderId,             // $3
+            "created",                 // $4
+            null,                      // $5
+            currency_code,             // $6
+            total,                     // $7  (or subtotal if you split later)
+            0,                         // $8
             0,                         // $9
-            0,                         // $10
+            total,                     // $10
             total,                     // $11
-            total,                     // $12
-            idempotencyKey,            // $13
-            1,                         // $14
-            data,                      // $15
+            idempotencyKey,            // $12
+            1,                         // $13
+            data,                      // $14
         ]
         );
 
@@ -183,7 +186,7 @@ router.post("/paypal/create-order", ensureAuth, async (req, res) => {
 });
 
 // confirms the payment on the client-side - redirect page to successful payment
-router.post("/paypal/capture", ensureAuth, async (req, res) => {
+router.post("/paypal/capture", getTokenFrom, authenticateToken, attachUser, ensureAuth, async (req, res) => {
     try {
         const { bookingId } = req.body;
 
@@ -204,7 +207,7 @@ router.post("/paypal/capture", ensureAuth, async (req, res) => {
 
         // ownership check - can only be coming from the actual user
         const currBookingUserId = currBooking.rows[0]["user_id"];
-        if (currBookingUserId !== req.user.sub) {
+        if (currBookingUserId !== req.user.id) {
             return res.status(403).send("Access denied!");
         }
 

@@ -36,6 +36,7 @@ async function createBooking(req, res) {
         
     }
     catch (err) {
+        console.log(err)
         await client.query("ROLLBACK");
         res.status(400).send("Bad Request!");
     }

@@ -75,6 +75,13 @@ export default function MyBookings() {
         <div className="page">
             <h2>My Bookings</h2>
 
+            <div style={{ marginTop: "12px" }}>
+                <Link to="/bookings/new">
+                    <button type="button">Create a booking</button>
+                </Link>
+            </div>
+
+
             <ul>
                 {
                     bookings.map((booking) => (

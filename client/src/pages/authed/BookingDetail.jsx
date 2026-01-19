@@ -60,8 +60,24 @@ export default function BookingDetail() {
             }
         }
         catch (error) {
-            setPayError(error.response?.data?.message || error.response?.data || error.message)
-            setPayStatus("error")
+            const status = error.response?.status;
+
+            if (status === 409) {
+                setPayStatus("blocked");
+                setPayError(
+                    error.response?.data ||
+                    "A payment is already in progress for this booking. If you already opened PayPal, complete it there. Otherwise refresh and try again."
+                );
+                return;
+            }
+
+            setPayError(
+                error.response?.data?.message ||
+                error.response?.data ||
+                error.message ||
+                "Payment failed"
+            );
+            setPayStatus("error");
         }
     }
 
@@ -129,15 +145,33 @@ export default function BookingDetail() {
                             <button
                                 type="button"
                                 onClick={PayPalHandler}
-                                disabled={payStatus === "loading"}
+                                disabled={payStatus === "loading" || payStatus === "redirecting" || payStatus === "blocked"}
                             >
-                                {payStatus === "loading" ? "Redirecting to PayPal..." : "Pay with PayPal"}
+                                {payStatus === "loading" 
+                                    ? "Redirecting to PayPal..." 
+                                    : payStatus === "redirecting"
+                                    ? "Redirecting to PayPal..."
+                                    : payStatus === "blocked"
+                                    ? "Payment already started"
+                                    : "Pay with PayPal"
+                                }
                             </button>
 
-                            {payStatus === "error" && payError ? (
+                            {(payStatus === "error" || payStatus === "blocked") && payError ? (
                                 <p style={{ marginTop: "10px" }}>
-                                <strong>Payment error:</strong> {payError}
+                                    <strong>
+                                        {payStatus === "blocked" ? "Payment notce:" : "Payment error:"}
+                                    </strong>{" "}
+                                    {payError}
                                 </p>
+                            ) : null}
+
+                            {payStatus === "blocked" ? (
+                                <div style={{ marginTop: "10px" }}>
+                                    <button type="button" onClick={() => window.location.reload()}>
+                                    Refresh page
+                                    </button>
+                                </div>
                             ) : null}
                         </>
                     )}

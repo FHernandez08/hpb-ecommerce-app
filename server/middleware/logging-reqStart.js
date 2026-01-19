@@ -1,9 +1,10 @@
 // Logs { req.id, method, path, ip, userId? }
 
 function requestStartLogger(req, res, next) {
-    const timestamp = new Date('2025-12-25T10:00:00Z');
-    const specifiedTimestamp = timestamp.getTime();
-    console.log(` ${specifiedTimestamp} ${req.id} START --> ${req.method} ${req.path} (ip=${req.ip}, userId=${req.user?.id})`)
+    const timestamp = Date.now();
+    const userId = req.user?.id ?? req.user?.sub ?? null;
+
+    console.log(` ${timestamp} ${req.id} START --> ${req.method} ${req.path} (ip=${req.ip}, userId=${userId})`)
 
     next();
 };
