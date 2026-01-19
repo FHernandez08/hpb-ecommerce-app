@@ -15,8 +15,19 @@ body {
 .page {
   max-width: 900px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 32px 24px;
 }
+
+.page h2 {
+  margin-bottom: 16px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.page p {
+  color: #374151;
+}
+
 
 /* ===== Navigation ===== */
 nav {
@@ -41,6 +52,7 @@ nav li {
 nav a {
   text-decoration: none;
   color: #2563eb;
+  font-weight: 500;
 }
 
 nav a:hover {
@@ -59,10 +71,29 @@ nav button {
 form {
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 24px;
-  max-width: 420px;
+  max-width: 480px;
 }
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 14px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
 
 form h2 {
   margin-top: 0;
@@ -75,13 +106,6 @@ label {
   font-size: 14px;
 }
 
-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 12px;
-  border-radius: 4px;
-  border: 1px solid #d1d5db;
-}
 
 button[type="submit"] {
   width: 100%;
@@ -98,9 +122,65 @@ button[type="submit"]:disabled {
   cursor: not-allowed;
 }
 
+button {
+  font-size: 14px;
+}
+
+button:not([type="submit"]) {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  color: #111827;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:not([type="submit"]):hover {
+  background: #e5e7eb;
+}
+
+
 /* ===== Utility ===== */
 hr {
   border: none;
   border-top: 1px solid #e5e7eb;
   margin: 16px 0;
 }
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.card p {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.card p strong {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.payment-info {
+  background: #f9fafb;
+  border-left: 4px solid #2563eb;
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.payment-error {
+  background: #fef2f2;
+  border-left: 4px solid #dc2626;
+  padding: 12px;
+  margin-top: 12px;
+  color: #991b1b;
+}
+
