@@ -22,7 +22,7 @@ import couponsRouter from "./routes/commerce/coupons.route.js"
 import globalLimter from "./middleware/rateLimiter-global.js";
 import requestId from "./middleware/request-id.js";
 import paypalWebhookRouter from "./middleware/paypal-body-exception.js";
-import requestStartLogger from './middleware/logging-reqstart.js';
+import requestStartLogger from './middleware/logging-reqStart.js';
 import healthRoute from './routes/health.route.js';
 import errorHandler from './middleware/errorHandler.js';
 
