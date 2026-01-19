@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams, Link } from "react-router-dom";
+import api from "../../services/api";
 
 export default function BookingDetail() {
     const [booking, setBooking] = useState(null);
@@ -14,7 +14,7 @@ export default function BookingDetail() {
 
     async function fetchBookingDetail() {
         try {
-            const response = await axios.get(`/api/bookings/${id}`, { withCredentials: true });
+            const response = await api.get(`/bookings/${id}`, { withCredentials: true });
 
             if (response.status === 200) {
                 setBooking(response.data.booking ?? response.data);
@@ -43,7 +43,7 @@ export default function BookingDetail() {
                 return;
             }
 
-            const response = await axios.post('/api/payments/paypal/create-order', { bookingId: booking.id }, {
+            const response = await api.post('/payments/paypal/create-order', { bookingId: booking.id }, {
                 withCredentials: true
             })
 

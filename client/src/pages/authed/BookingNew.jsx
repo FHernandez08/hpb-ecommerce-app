@@ -1,6 +1,6 @@
-import { useState, useEffect} from "react";
-import axios from "axios";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import api from "../../services/api";
 
 export default function BookingNew() {
     const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function BookingNew() {
                 zip: zip.trim() || null,
             };
 
-            const response = await axios.post("/api/bookings", payload, {
+            const response = await api.post("/bookings", payload, {
                 withCredentials: true,
             });
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios"
 import { Link, useNavigate } from "react-router-dom";
+import api from "../../services/api";
 
 export default function MyBookings() {
     const [bookings, setBookings] = useState([]);
@@ -14,7 +14,7 @@ export default function MyBookings() {
             setPageStatus("loading");
             let list;
 
-            const response = await axios.get('/api/bookings/me', {
+            const response = await api.get('/bookings/me', {
                 withCredentials: true,
             });
 

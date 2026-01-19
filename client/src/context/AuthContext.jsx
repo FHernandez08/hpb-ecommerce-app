@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from 'axios';
+import api from "../services/api.js";
 
 // creates the context
 const AuthContext = createContext(null);
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     // securely renews the user's authentication status
     async function refreshSession() {
         try {
-            const response = await axios.get('/api/users/me', {
+            const response = await api.get('/users/me', {
                 withCredentials: true
             });
 
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
     // Login action
     async function login(credentials) {
         try {
-            const response = await axios.post('/api/auth/login', credentials,{
+            const response = await api.post('/auth/login', credentials,{
                 withCredentials: true
             });
 
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     // Register action
     async function register(payload) {
         try {
-            const response = await axios.post('/api/auth/register', payload,{
+            const response = await api.post('/auth/register', payload,{
                 withCredentials: true
             });
 
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
     // Logout action
     async function logout() {
         try {
-            const response = await axios.post('/api/auth/logout', null,{
+            const response = await api.post('/auth/logout', null,{
                 withCredentials: true
             });
 

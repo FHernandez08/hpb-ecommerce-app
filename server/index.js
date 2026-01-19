@@ -37,6 +37,7 @@ import adminUsersRouter from "./routes/admin/admin-users.route.js";
 
 dotenv.config();
 const app = express();
+app.set("trust proxy", 1)
 
 app.use(requestId);
 
@@ -95,7 +96,7 @@ console.log("Mounted /api/users")
 app.use("/api/bookings", bookingRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/addons", addOnsRouter);
-app.use("api/coupons", couponsRouter);
+app.use("/api/coupons", couponsRouter);
 
 // Admin Routes
 app.use("/api/admin/addons", adminAddonsRouter);
