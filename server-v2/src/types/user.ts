@@ -4,7 +4,7 @@ export const UserSchema = z.object({
     id: z.uuid(),
     role: z.enum(["user", "admin"]),
     email: z.email().trim(),
-    password_hash: z.string(),
+    password_hash: z.string().optional(),
     first_name: z.string(),
     last_name: z.string(),
     avatar_url: z.string().nullable(),

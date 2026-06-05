@@ -1,5 +1,3 @@
-
-
 module.exports.handler = async (event) => {
     console.log('Request event: ', event);
 
