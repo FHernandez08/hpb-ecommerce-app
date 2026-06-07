@@ -1,15 +1,11 @@
-import { Request, Response } from "express";
-import { 
-    CognitoIdentityProviderClient,
-    InitiateAuthCommand,
-    AuthFlowType,
-    InitiateAuthCommandInput,
- } from "@aws-sdk/client-cognito-identity-provider";
+import { type Request, type Response } from "express";
+import { CognitoIdentityProviderClient, InitiateAuthCommand, AuthFlowType } from "@aws-sdk/client-cognito-identity-provider";
+import type { InitiateAuthCommandInput } from "@aws-sdk/client-cognito-identity-provider";
 import { validatedAWSSchema } from "../config/aws.config";
 
 // Initializing the Cognito Client
 const cognitoClient = new CognitoIdentityProviderClient({
-    region: validatedAWSSchema.AWS_REGION;
+    region: validatedAWSSchema.AWS_REGION
 });
 
 // Login Controller
@@ -100,7 +96,7 @@ export const loginController = async (req: Request, res: Response): Promise<void
 };
 
 // Refresh Controller
-export const refreshController = async (req: Request, res:Response) => {
+export const refreshController = async (req: Request, res: Response) => {
     try {
         const refreshToken = req.cookies.refreshToken;
 

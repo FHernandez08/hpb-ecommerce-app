@@ -1,6 +1,6 @@
 import { CognitoJwtVerifier } from "aws-jwt-verify";
 import { validatedAWSSchema } from "../config/aws.config";
-import { Request, Response, NextFunction } from "express";
+import { type Request, type Response, type NextFunction } from "express";
 
 const jwtVerifier = CognitoJwtVerifier.create({
     userPoolId: validatedAWSSchema.AWS_COGNITO_USER_POOL_ID,
