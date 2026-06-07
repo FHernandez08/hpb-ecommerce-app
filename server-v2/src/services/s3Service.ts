@@ -1,5 +1,6 @@
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { validatedAWSSchema } from "../config/aws.config";
 
@@ -21,9 +22,9 @@ class S3Service {
         });
 
         await upload.done();
-    }
+    };
 
-    async deleteObject(key:string) {
+    async deleteObject(key: string) {
         const input = {
             Bucket: validatedAWSSchema.AWS_S3_BUCKET_NAME,
             Key: key,
@@ -31,5 +32,18 @@ class S3Service {
 
         const command = new DeleteObjectCommand(input);
         const response = await this.s3Client.send(command);
-    }
+
+        return response;
+    };
+
+    async getPresignedUploadUrl(key: string, expiredInSeconds: number) {
+        const uploadParams = {
+            Bucket: validatedAWSSchema.AWS_S3_BUCKET_NAME,
+            Key: key,
+        };
+
+        const command = new PutObjectCommand(uploadParams);
+        const url = getSignedUrl(this.s3Client, command, { expiresIn: expiredInSeconds });
+        return url;
+    };
 }
