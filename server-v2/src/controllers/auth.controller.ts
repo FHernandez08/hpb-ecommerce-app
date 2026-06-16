@@ -19,7 +19,7 @@ export const loginController = async (req: Request, res: Response): Promise<void
             return;
         }
 
-        // Configure the authentication command parameters
+        // Configure the authentication command parameters which are attached to the command.
         const command = new InitiateAuthCommand({
             AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
             ClientId: validatedAWSSchema.AWS_COGNITO_CLIENT_ID,
@@ -124,7 +124,7 @@ export const refreshController = async (req: Request, res: Response) => {
         if (data.AuthenticationResult) {
             const { AccessToken } = data.AuthenticationResult;
 
-            // Overwrite the old cooke with the brand-new rotated Access Token
+            // Overwrite the old cookie with the brand-new rotated Access Token
             res.cookie('accessToken', AccessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
