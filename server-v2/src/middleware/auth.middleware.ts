@@ -8,7 +8,7 @@ const jwtVerifier = CognitoJwtVerifier.create({
     tokenUse: "access",
 });
 
-const verifyCognitoToken = async (req: Request, res: Response, next: NextFunction) => {
+export const verifyCognitoToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -28,5 +28,3 @@ const verifyCognitoToken = async (req: Request, res: Response, next: NextFunctio
         return res.status(401).json( { error: "Unauthorized access!" });
     }
 };
-
-module.exports = verifyCognitoToken;
