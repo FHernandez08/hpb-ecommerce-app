@@ -11,7 +11,7 @@ class S3Service {
         this.s3Client = new S3Client({ region: validatedAWSSchema.AWS_REGION });
     }
 
-    async uploadStream(key: string, stream: any){
+    async uploadStream(key: string, stream: any) {
         const upload = new Upload({
             client: this.s3Client,
             params: {
@@ -47,3 +47,5 @@ class S3Service {
         return url;
     };
 }
+
+export const s3ServiceConfig = new S3Service();
