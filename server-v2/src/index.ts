@@ -2,11 +2,15 @@ import express from 'express';
 import { secretsConfig } from './config/secrets';
 import useragent from 'express-useragent';
 import { auditLogger } from './middleware/audit.middleware';
+import helmet from 'helmet';
+import { globalLimiter } from './config/rateLimit.config';
 
 const app = express();
 
 app.use(express.json());
 app.use(useragent.express());
+app.use(helmet);
+app.use(globalLimiter)
 
 app.use(auditLogger);
 
