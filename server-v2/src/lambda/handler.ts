@@ -1,4 +1,4 @@
-module.exports.handler = async (event) => {
+module.exports.handler = async (event: any) => {
     console.log('Request event: ', event);
 
     const method = event.requestContext.http.method;

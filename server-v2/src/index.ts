@@ -1,7 +1,14 @@
 import express from 'express';
 import { secretsConfig } from './config/secrets';
+import useragent from 'express-useragent';
+import { auditLogger } from './middleware/audit.middleware';
 
 const app = express();
+
+app.use(express.json());
+app.use(useragent.express());
+
+app.use(auditLogger);
 
 async function startServer() {
     try {
