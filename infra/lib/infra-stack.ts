@@ -4,6 +4,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as apigwv2 from 'aws-cdk-lib/aws-apigatewayv2';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as path from 'path';
 
 export class HPBV2SpineDevStack extends cdk.Stack {
@@ -28,6 +29,17 @@ export class HPBV2SpineDevStack extends cdk.Stack {
       
     })
 
+    /* Tables */
+    // "SecurityAudit" Table
+    const auditTable = new dynamodb.Table(this, 'SecurityAuditTable', {
+      tableName: 'SecurityAudit',
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
+
+    // -------------------------------------------------------------------------------------------------------------------------//
+
     // lambda function for the HTTP API handler
     const hpbHttpApiLambda = new lambda.Function(this, 'LambdaHandler', {
       functionName: 'hpbWebAppApiFunction',
@@ -36,8 +48,12 @@ export class HPBV2SpineDevStack extends cdk.Stack {
       handler: 'handler.handler',
       environment: {
         STAGE: 'dev',
+        AWS_DYNAMODB_TABLE_NAME: auditTable.tableName,
       }
     });
+
+    // Granting the IAM permissions to write records to DynamoDB
+    auditTable.grantReadWriteData(hpbHttpApiLambda);
 
     // Lambda integration
     const lambdaIntegration = new HttpLambdaIntegration('LambdaIntegration', hpbHttpApiLambda);
@@ -45,8 +61,8 @@ export class HPBV2SpineDevStack extends cdk.Stack {
     // HTTP API created
     const hpbAdminHttpApi = new apigwv2.HttpApi(this, 'HPBAdminHttpApi', {
       apiName: 'HPBWebAdminHttpApi',
-
     });
+
 
     /* API Routes */
     // GET /health route
@@ -56,20 +72,31 @@ export class HPBV2SpineDevStack extends cdk.Stack {
       integration: lambdaIntegration
     });
 
-    
+    // Proxy route to catch all /api/v2/users endpoints and pass them to Express
+    hpbAdminHttpApi.addRoutes({
+      path: '/api/v2/users/{proxy+}',
+      methods: [
+        apigwv2.HttpMethod.GET,
+        apigwv2.HttpMethod.POST,
+        apigwv2.HttpMethod.PUT,
+        apigwv2.HttpMethod.DELETE
+      ],
+      integration: lambdaIntegration
+    });
+
+    // -------------------------------------------------------------------------------------------------------------------------//
     /* stages */
     hpbAdminHttpApi.addStage('DevStage', {
       stageName: 'dev',
       autoDeploy: true,
     })
     
+    // -------------------------------------------------------------------------------------------------------------------------//
     /* Outputs */
-    
     // Output for health endpoint
-    new cdk.CfnOutput(this, 'healthEndpoint', {
-      value: hpbAdminHttpApi.apiEndpoint + '/health',
-      description: 'The endpoint URL for the /health route',
+    new cdk.CfnOutput(this, 'apiGatewayBaseUrl', {
+      value: hpbAdminHttpApi.apiEndpoint,
+      description: 'The root base URL for the HPB V2 API Gateway',
     });
-
   }
 }

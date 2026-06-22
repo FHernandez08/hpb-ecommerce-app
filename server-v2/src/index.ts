@@ -4,15 +4,29 @@ import useragent from 'express-useragent';
 import { auditLogger } from './middleware/audit.middleware';
 import helmet from 'helmet';
 import { globalLimiter } from './config/rateLimit.config';
+import 'dotenv/config';
 
+// Main Routes imports
+import userRoutes from "./routes/users/user.route.v2";
+
+// Middleware imports
+
+
+// Admin Routes imports
+
+
+///////////////////////////////////////////////////////////////////////////////////////
 const app = express();
 
 app.use(express.json());
 app.use(useragent.express());
-app.use(helmet);
+app.use(helmet());
 app.use(globalLimiter)
 
 app.use(auditLogger);
+
+// routes
+app.use("/api/v2/users", userRoutes);
 
 async function startServer() {
     try {

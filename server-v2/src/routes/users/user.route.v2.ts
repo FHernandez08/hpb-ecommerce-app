@@ -5,8 +5,8 @@ import { multipartParsing } from "../../middleware/mutipart.middleware";
 
 const router = express.Router();
 
-router.get("/v2/users/me", verifyCognitoToken, getUserProfile);
+router.get("/me", verifyCognitoToken, getUserProfile);
 
-router.put("v2/users/me", verifyCognitoToken, multipartParsing, updateProfilePicture)
+router.put("/me", verifyCognitoToken, multipartParsing, updateProfilePicture)
 
 export default router;

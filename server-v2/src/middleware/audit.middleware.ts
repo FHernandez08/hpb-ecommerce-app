@@ -23,6 +23,12 @@ export async function auditLogger(req: Request, res: Response, next: NextFunctio
         const SENSITIVE_KEYS = ['password', 'confirm_password', 'password_confirmation', 'credit_card', 'ssn', 'token'];
 
         const sanitizePayload = (body: any): any => {
+
+            // Defends the incoming paylaod so when confirming the user, it would return an empty value for token, which would trigger the authenticaion middleware to return a 401 unauthorized code.
+            if (body === undefined || body === null) {
+                return {};
+            };
+
             const cloned = JSON.parse(JSON.stringify(body))
 
             const redact = (obj: any) => {
@@ -45,25 +51,29 @@ export async function auditLogger(req: Request, res: Response, next: NextFunctio
         const sanitizedPayload = sanitizePayload(req.body);
 
         // 4. Asynchronously fire the database INSERT (fire-and-forget pattern)
-        const auditItem = {
-            TableName: "SecurityAudit",
+        res.on('finish', () => {
+            const auditItem = {
+            TableName: validatedAWSSchema.AWS_DYNAMODB_TABLE_NAME,
             Item: {
-                id: crypto.randomUUID(),
-                actor_id: actor ?? "ANONYMOUS",
-                action: `${req.method}:${userPath}`,
-                timestamp: new Date().toISOString(),
-                metadata: {
-                    ip: ipAddress,
-                    browser: userAgent
-                },
-                payload: sanitizedPayload
-            }
-        };
+                    id: crypto.randomUUID(),
+                    statusCode: res.statusCode,
+                    statusMessage: res.statusMessage,
+                    actor_id: actor ?? "ANONYMOUS",
+                    action: `${req.method}:${userPath}`,
+                    timestamp: new Date().toISOString(),
+                    metadata: {
+                        ip: ipAddress,
+                        browser: userAgent
+                    },
+                    payload: sanitizedPayload
+                }
+            };
 
-        // Fire the promise without awaiting it, letting Express proceed instantly
-        dynamoClient.send(new PutCommand(auditItem)).catch((dbError) => {
-            console.error("CRITICAL: Audit Telemetry failed to write:", dbError);
-        })
+            // Fire the promise without awaiting it, letting Express proceed instantly
+            dynamoClient.send(new PutCommand(auditItem)).catch((dbError) => {
+                console.error("CRITICAL: Audit Telemetry failed to write:", dbError);
+            });
+        });
 
     } catch (error) {
         console.error("SYSTEM ERROR: Exception thrown inside auditLogger middleware:", error);
