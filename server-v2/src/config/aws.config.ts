@@ -6,6 +6,7 @@ const AWSSchema = z.object({
     AWS_COGNITO_USER_POOL_ID: z.string(),
     AWS_COGNITO_CLIENT_ID: z.string(),
     AWS_DYNAMODB_TABLE_NAME: z.string(),
+    AWS_DYNAMODB_CART_TABLE_NAME: z.string(),
 });
 
 export const RemoteSecretsSchema = z.object({

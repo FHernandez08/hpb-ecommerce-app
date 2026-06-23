@@ -24,16 +24,19 @@ export class HPBV2SpineDevStack extends cdk.Stack {
       accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
     });
 
-    // admin UI app client
-    const adminUserPoolClient = adminUserPool.addClient('adminAppClient', {
-      
-    })
-
     /* Tables */
     // "SecurityAudit" Table
     const auditTable = new dynamodb.Table(this, 'SecurityAuditTable', {
       tableName: 'SecurityAudit',
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
+
+    const cartTable = new dynamodb.Table(this, 'hpbCartTablev2', {
+      tableName: 'hpb-cart-v2',
+      partitionKey: { name: 'PK', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'SK', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
@@ -49,11 +52,13 @@ export class HPBV2SpineDevStack extends cdk.Stack {
       environment: {
         STAGE: 'dev',
         AWS_DYNAMODB_TABLE_NAME: auditTable.tableName,
+        AWS_DYNAMODB_CART_TABLE_NAME: cartTable.tableName,
       }
     });
 
     // Granting the IAM permissions to write records to DynamoDB
     auditTable.grantReadWriteData(hpbHttpApiLambda);
+    cartTable.grantReadWriteData(hpbHttpApiLambda);
 
     // Lambda integration
     const lambdaIntegration = new HttpLambdaIntegration('LambdaIntegration', hpbHttpApiLambda);
