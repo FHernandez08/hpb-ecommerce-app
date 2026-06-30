@@ -2,7 +2,7 @@ import { type Request, type Response} from 'express';
 import { addItemToCart, applyCouponToCart, clearCartService, getCartByUserId, removeItemFromCart, updateItemQuantityService } from '../services/cart.service';
 import { success } from 'zod';
 
-// controller for the GET route
+// controller for the GET / route
 export const getCart = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.sub;
@@ -56,6 +56,7 @@ export const getCart = async (req: Request, res: Response) => {
     }
 };
 
+// controller for POST /items route
 export const addItem = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.sub;
@@ -73,6 +74,7 @@ export const addItem = async (req: Request, res: Response) => {
     }
 };
 
+// controller for DELETE /items/:itemId route
 export const removeItem = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.sub;
@@ -91,6 +93,7 @@ export const removeItem = async (req: Request, res: Response) => {
     }
 };
 
+// controller for POST /coupon route
 export const applyCoupon = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.sub;
@@ -112,6 +115,7 @@ export const applyCoupon = async (req: Request, res: Response) => {
     }
 };
 
+// controller for DELETE / route
 export const clearCart = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.sub;
@@ -128,6 +132,7 @@ export const clearCart = async (req: Request, res: Response) => {
     }
 }
 
+// controller for PATCH /items/:itemId route
 export const updateItemQuantity = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.sub;
