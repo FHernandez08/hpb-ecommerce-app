@@ -1,4 +1,4 @@
-import express, { type Request, type Response} from "express";
+import express from "express";
 import { verifyCognitoToken } from "../../middleware/auth.middleware";
 import { getUserProfile, updateProfilePicture } from "../../controllers/user.controller";
 import { multipartParsing } from "../../middleware/mutipart.middleware";

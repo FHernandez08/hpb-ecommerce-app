@@ -33,6 +33,7 @@ export class HPBV2SpineDevStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
+    // table for cart
     const cartTable = new dynamodb.Table(this, 'hpbCartTablev2', {
       tableName: 'hpb-cart-v2',
       partitionKey: { name: 'PK', type: dynamodb.AttributeType.STRING },
@@ -80,6 +81,18 @@ export class HPBV2SpineDevStack extends cdk.Stack {
     // Proxy route to catch all /api/v2/users endpoints and pass them to Express
     hpbAdminHttpApi.addRoutes({
       path: '/api/v2/users/{proxy+}',
+      methods: [
+        apigwv2.HttpMethod.GET,
+        apigwv2.HttpMethod.POST,
+        apigwv2.HttpMethod.PUT,
+        apigwv2.HttpMethod.DELETE
+      ],
+      integration: lambdaIntegration
+    });
+
+    // Proxy route to catch all /api/v2/cart endpoints and pass them to Express
+    hpbAdminHttpApi.addRoutes({
+      path: '/api/v2/cart/{proxy+}',
       methods: [
         apigwv2.HttpMethod.GET,
         apigwv2.HttpMethod.POST,

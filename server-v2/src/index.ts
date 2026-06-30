@@ -8,9 +8,7 @@ import 'dotenv/config';
 
 // Main Routes imports
 import userRoutes from "./routes/users/user.route.v2";
-
-// Middleware imports
-
+import cartRoutes from "./routes/cart/cart.route.v2";
 
 // Admin Routes imports
 
@@ -27,6 +25,8 @@ app.use(auditLogger);
 
 // routes
 app.use("/api/v2/users", userRoutes);
+app.use("/api/v2/cart", cartRoutes);
+
 
 async function startServer() {
     try {
